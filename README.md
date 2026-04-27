@@ -26,44 +26,59 @@ seald/
 └── README.md
 ```
 
-## Quick start (backend)
+## Quick start
 
-1. Copy env file and fill in your Supabase credentials:
+1. Configure the backend environment:
 
-   ```bash
+```bash
    cp backend/.env.example backend/.env
-   ```
+   # fill in Supabase keys and generate an encryption key:
+   python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+```
 
-2. Build & run:
+   ⚠️ Losing `ENCRYPTION_KEYS` means losing all vault data. Back it up separately.
 
-   ```bash
+2. Build & run both services:
+
+```bash
    docker compose up --build
-   ```
+```
 
-3. Check it works:
-
+3. Open:
+   - Web app: http://localhost:3000
+   - API docs: http://localhost:8000/docs
    - Health: http://localhost:8000/health
-   - Interactive API docs: http://localhost:8000/docs
 
-## API endpoints (v1)
+## API (v1)
 
 | Method | Path | Description |
 |---|---|---|
 | GET | `/health` | Service health check |
 | POST | `/api/v1/passwords/generate` | Generate a secure password (+ strength score) |
 | POST | `/api/v1/backup-codes/generate` | Generate 2FA-style backup codes |
-| GET | `/api/v1/sites` | List all saved sites |
-| POST | `/api/v1/sites` | Save a new site |
-| GET/PUT/DELETE | `/api/v1/sites/{id}` | Read / update / remove a site |
+| GET / POST | `/api/v1/sites` | List / create vault entries |
+| GET / PUT / DELETE | `/api/v1/sites/{id}` | Read / update / remove an entry |
 
-> Site storage is in-memory for now; it will move to Supabase in a later step.
+Secrets (passwords, backup codes) are encrypted at rest with Fernet.
+Site storage is in-memory for now; Supabase persistence is the next milestone.
 
-## Web app
+## Development
 
-Runs at http://localhost:3000 (`docker compose up --build` starts both services).
-Local dev without Docker: `cd frontend && npm install && npm run dev` (backend must run on :8000).
+```bash
+# backend tooling
+pip install -r backend/requirements-dev.txt
+ruff check backend/ && ruff format --check backend/
 
-Screens:
-1. **Dashboard** — all saved sites with show/hide + copy password, edit and remove actions
-2. **Add site** — site, username, password (with "Generate new password" button calling the API, plus a live strength chip), backup codes, note
-3. **Edit site** — same form pre-filled; remove has a confirmation dialog
+# frontend (hot reload, backend must run on :8000)
+cd frontend && npm install && npm run dev
+```
+
+CI runs ruff, mypy, and the frontend build on every push and pull request.
+Failures are posted to Slack via the GitHub app.
+
+## Roadmap
+
+- [ ] Supabase persistence for vault entries
+- [ ] Backend test suite (pytest) in CI
+- [ ] Authentication & row-level security
+- [ ] End-to-end encryption (client-side, zero-knowledge)
