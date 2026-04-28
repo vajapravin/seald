@@ -23,6 +23,9 @@ jobs:
         run: ruff format --check backend/
       - name: Mypy
         run: mypy backend/app --ignore-missing-imports
+      - name: Tests
+        run: pytest
+        working-directory: backend
 
   frontend:
     name: Frontend — lint & build
