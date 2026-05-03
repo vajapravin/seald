@@ -1,4 +1,4 @@
-from app.api.v1 import sites
+from app.repositories.sites import _memory_repo
 
 PAYLOAD = {
     "site": "github.com",
@@ -24,7 +24,7 @@ def test_create_and_get(client):
 
 def test_stored_secrets_are_encrypted(client):
     created = client.post("/api/v1/sites", json=PAYLOAD).json()
-    stored = sites._SITES[created["id"]]
+    stored = _memory_repo.get(created["id"])
     assert stored["password"] != "Temp123!"  # ciphertext at rest
     assert stored["backup_code"] != "A3F9-K2M7"
     assert created["password"] == "Temp123!"  # plaintext in API response
