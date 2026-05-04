@@ -10,12 +10,13 @@ import os
 from cryptography.fernet import Fernet
 
 os.environ["ENCRYPTION_KEYS"] = Fernet.generate_key().decode()
+os.environ["STORAGE_BACKEND"] = "memory"
 
 import pytest
 from fastapi.testclient import TestClient
 
-from app.api.v1 import sites
 from app.main import app
+from app.repositories.sites import _memory_repo
 
 
 @pytest.fixture()
@@ -26,6 +27,6 @@ def client():
 @pytest.fixture(autouse=True)
 def clean_store():
     """Each test starts with an empty vault — no cross-test contamination."""
-    sites._SITES.clear()
+    _memory_repo.clear()
     yield
-    sites._SITES.clear()
+    _memory_repo.clear()

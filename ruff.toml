@@ -15,3 +15,6 @@ select = [
 
 [lint.isort]
 known-first-party = ["app"]
+
+[lint.per-file-ignores]
+"backend/app/api/**" = ["B008"]
