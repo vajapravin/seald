@@ -5,6 +5,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/) · Versioning: [SemVer](
 
 ## [Unreleased]
 
+## [0.4.0] - 2026-07-31
+
+### Changed
+- README.md file modified with installation steps
+
+## [Released]
+
 ## [0.3.0] - 2026-07-31
 
 ### Added
