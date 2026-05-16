@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -28,6 +28,8 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import LockOpenRoundedIcon from '@mui/icons-material/LockOpenRounded';
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
 import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
+import CloudOffRoundedIcon from '@mui/icons-material/CloudOffRounded';
+import RefreshRoundedIcon from '@mui/icons-material/RefreshRounded';
 import { api } from '../api/client';
 
 export default function Dashboard() {
@@ -45,7 +47,7 @@ export default function Dashboard() {
       .listSites()
       .then(setSites)
       .catch((e) => {
-        setSites([]);
+        setSites(undefined);   // undefined = failed · null = loading · [] = truly empty
         setError(e.message);
       });
   }, []);
@@ -78,6 +80,15 @@ export default function Dashboard() {
     }
   };
 
+  const location = useLocation();
+
+  React.useEffect(() => {
+    if (location.state?.toast) {
+      setSnack(location.state.toast);
+      window.history.replaceState({}, '');   // don't replay on refresh/back
+    }
+  }, [location.state]);
+
   return (
     <Stack spacing={3}>
       <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center' }}>
@@ -86,7 +97,7 @@ export default function Dashboard() {
             Your vault
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            {sites ? `${sites.length} site${sites.length === 1 ? '' : 's'} saved` : 'Loading…'}
+            {Array.isArray(sites) ? `${sites.length} site${sites.length === 1 ? '' : 's'} saved` : ' '}
           </Typography>
         </Box>
         <Button
@@ -108,6 +119,21 @@ export default function Dashboard() {
         <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
           <CircularProgress />
         </Box>
+      ) : sites === undefined ? (
+        <Card variant="outlined">
+          <CardContent>
+            <Stack spacing={2} sx={{ alignItems: 'center', py: 6, textAlign: 'center' }}>
+              <CloudOffRoundedIcon sx={{ fontSize: 48, color: 'text.secondary' }} />
+              <Typography variant="h6">Can't reach your vault</Typography>
+              <Typography variant="body2" sx={{ color: 'text.secondary', maxWidth: 380 }}>
+                The Seald backend isn't responding. Check that it's running, then try again.
+              </Typography>
+              <Button variant="contained" onClick={load} startIcon={<RefreshRoundedIcon />}>
+                Try again
+              </Button>
+            </Stack>
+          </CardContent>
+        </Card>
       ) : sites.length === 0 ? (
         <Card variant="outlined">
           <CardContent>
@@ -191,7 +217,7 @@ export default function Dashboard() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setToDelete(null)}>Cancel</Button>
-          <Button color="error" variant="contained" onClick={confirmDelete} disabled={deleting}>
+          <Button color="error" variant="contained" onClick={confirmDelete} disabled={deleting} startIcon={deleting ? <CircularProgress size={16} color="inherit" /> : null}>
             {deleting ? 'Removing…' : 'Remove site'}
           </Button>
         </DialogActions>
