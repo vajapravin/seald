@@ -5,12 +5,23 @@ Format: [Keep a Changelog](https://keepachangelog.com/) · Versioning: [SemVer](
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-31
+
+### Added
+- Live password strength meter (typed and generated) via @zxcvbn-ts
+- Generate-backup-codes button on the site form
+- Password generator options: length slider and symbols toggle
+- Unsaved-changes confirmation when leaving the form
+
+### Changed
+- Migrated to React Router data router (createBrowserRouter) to support navigation blocking
+
+## [Released]
+
 ## [0.4.0] - 2026-07-31
 
 ### Changed
 - README.md file modified with installation steps
-
-## [Released]
 
 ## [0.3.0] - 2026-07-31
 
