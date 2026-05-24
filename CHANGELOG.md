@@ -5,12 +5,20 @@ Format: [Keep a Changelog](https://keepachangelog.com/) · Versioning: [SemVer](
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-07-31
+
+### Added
+- Vault health summary: score, weak/reused/missing-backup-code counts in the left panel
+
+### Changed
+- Sites data lifted into a shared VaultContext (single fetch, consumed by dashboard and summary)
+
+## [Released]
+
 ## [0.6.0] - 2026-07-31
 
 ### Added
 - Per-route page titles (e.g. "Your vault · Seald")
-
-## [Released]
 
 ## [0.5.0] - 2026-07-31
 

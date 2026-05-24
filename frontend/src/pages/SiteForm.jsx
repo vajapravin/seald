@@ -35,6 +35,7 @@ import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
 import VisibilityOffRoundedIcon from '@mui/icons-material/VisibilityOffRounded';
 import VisibilityRoundedIcon from '@mui/icons-material/VisibilityRounded';
 import { api } from '../api/client';
+import { useVault } from '../context/VaultContext';
 
 const zxcvbnInstance = new ZxcvbnFactory({
   translations: zxcvbnEnPackage.translations,
@@ -59,6 +60,7 @@ export default function SiteForm({ mode }) {
   const navigate = useNavigate();
   const { id } = useParams();
   const isEdit = mode === 'edit';
+  const { load } = useVault();
 
   const [values, setValues] = React.useState(EMPTY);
   const [initial, setInitial] = React.useState(EMPTY);
@@ -174,9 +176,11 @@ export default function SiteForm({ mode }) {
     try {
       if (isEdit) {
         await api.updateSite(id, values);
+        load();
         navigate('/', { state: { toast: `${values.site} updated` } });
       } else {
         await api.createSite(values);
+        load();
         navigate('/', { state: { toast: `${values.site} saved to your vault` } });
       }
     } catch (e) {
