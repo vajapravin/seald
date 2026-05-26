@@ -8,6 +8,7 @@ the API contract stays the same.
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
+from app.core.auth import get_current_user_id
 from app.core.crypto import decrypt, encrypt
 from app.repositories.sites import SiteRepository, get_site_repository
 
@@ -54,20 +55,29 @@ def _to_out(record: dict) -> SiteOut:
 
 
 @router.get("", response_model=list[SiteOut])
-def list_sites(repo: SiteRepository = Depends(get_site_repository)) -> list[SiteOut]:
-    return [_to_out(r) for r in repo.list_all()]
+def list_sites(
+    user_id: str = Depends(get_current_user_id),
+    repo: SiteRepository = Depends(get_site_repository),
+) -> list[SiteOut]:
+    return [_to_out(r) for r in repo.list_all(user_id)]
 
 
 @router.post("", response_model=SiteOut, status_code=201)
 def create_site(
-    payload: SiteCreate, repo: SiteRepository = Depends(get_site_repository)
+    payload: SiteCreate,
+    user_id: str = Depends(get_current_user_id),
+    repo: SiteRepository = Depends(get_site_repository),
 ) -> SiteOut:
-    return _to_out(repo.create(_encrypt_payload(payload)))
+    return _to_out(repo.create(_encrypt_payload(payload), user_id))
 
 
 @router.get("/{site_id}", response_model=SiteOut)
-def get_site(site_id: str, repo: SiteRepository = Depends(get_site_repository)) -> SiteOut:
-    record = repo.get(site_id)
+def get_site(
+    site_id: str,
+    user_id: str = Depends(get_current_user_id),
+    repo: SiteRepository = Depends(get_site_repository),
+) -> SiteOut:
+    record = repo.get(site_id, user_id)
     if record is None:
         raise HTTPException(status_code=404, detail="Site not found")
     return _to_out(record)
@@ -77,15 +87,20 @@ def get_site(site_id: str, repo: SiteRepository = Depends(get_site_repository)) 
 def update_site(
     site_id: str,
     payload: SiteUpdate,
+    user_id: str = Depends(get_current_user_id),
     repo: SiteRepository = Depends(get_site_repository),
 ) -> SiteOut:
-    record = repo.update(site_id, _encrypt_payload(payload))
+    record = repo.update(site_id, _encrypt_payload(payload), user_id)
     if record is None:
         raise HTTPException(status_code=404, detail="Site not found")
     return _to_out(record)
 
 
 @router.delete("/{site_id}", status_code=204)
-def delete_site(site_id: str, repo: SiteRepository = Depends(get_site_repository)) -> None:
-    if not repo.delete(site_id):
+def delete_site(
+    site_id: str,
+    user_id: str = Depends(get_current_user_id),
+    repo: SiteRepository = Depends(get_site_repository),
+) -> None:
+    if not repo.delete(site_id, user_id):
         raise HTTPException(status_code=404, detail="Site not found")

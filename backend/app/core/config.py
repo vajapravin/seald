@@ -26,6 +26,9 @@ class Settings(BaseSettings):
     # Storage backend: "supabase" or "memory" (tests, offline dev)
     STORAGE_BACKEND: str = "supabase"
 
+    # Supabase JWT verification (Settings → API → JWT Secret)
+    SUPABASE_JWT_SECRET: str = ""
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     @property

@@ -1,11 +1,10 @@
-"""Storage backends for vault entries.
+"""Storage backends for vault entries, scoped per user.
 
-Routes depend on the SiteRepository protocol, not a concrete backend:
-tests use InMemorySiteRepository, production uses SupabaseSiteRepository.
-Both store ciphertext only — encryption happens in the route layer.
+Routes depend on the SiteRepository protocol. Every method takes a user_id
+and only ever touches that user's rows — backend-level filtering, with
+Postgres RLS as the defense-in-depth backstop.
 """
-
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from typing import Protocol
 from uuid import uuid4
 
@@ -14,42 +13,56 @@ from app.services.supabase_client import get_supabase
 
 
 def _now() -> str:
-    return datetime.now(UTC).isoformat()
+    return datetime.now(timezone.utc).isoformat()
 
 
 class SiteRepository(Protocol):
-    def list_all(self) -> list[dict]: ...
-    def get(self, site_id: str) -> dict | None: ...
-    def create(self, data: dict) -> dict: ...
-    def update(self, site_id: str, data: dict) -> dict | None: ...
-    def delete(self, site_id: str) -> bool: ...
+    def list_all(self, user_id: str) -> list[dict]: ...
+    def get(self, site_id: str, user_id: str) -> dict | None: ...
+    def create(self, data: dict, user_id: str) -> dict: ...
+    def update(self, site_id: str, data: dict, user_id: str) -> dict | None: ...
+    def delete(self, site_id: str, user_id: str) -> bool: ...
 
 
 class InMemorySiteRepository:
     def __init__(self) -> None:
         self._store: dict[str, dict] = {}
 
-    def list_all(self) -> list[dict]:
-        return sorted(self._store.values(), key=lambda s: s["site"].lower())
+    def list_all(self, user_id: str) -> list[dict]:
+        rows = [s for s in self._store.values() if s["user_id"] == user_id]
+        return sorted(rows, key=lambda s: s["site"].lower())
 
-    def get(self, site_id: str) -> dict | None:
-        return self._store.get(site_id)
+    def get(self, site_id: str, user_id: str) -> dict | None:
+        record = self._store.get(site_id)
+        if record is None or record["user_id"] != user_id:
+            return None
+        return record
 
-    def create(self, data: dict) -> dict:
-        record = {"id": str(uuid4()), **data, "created_at": _now(), "updated_at": _now()}
+    def create(self, data: dict, user_id: str) -> dict:
+        record = {
+            "id": str(uuid4()),
+            "user_id": user_id,
+            **data,
+            "created_at": _now(),
+            "updated_at": _now(),
+        }
         self._store[record["id"]] = record
         return record
 
-    def update(self, site_id: str, data: dict) -> dict | None:
+    def update(self, site_id: str, data: dict, user_id: str) -> dict | None:
         record = self._store.get(site_id)
-        if record is None:
+        if record is None or record["user_id"] != user_id:
             return None
         record.update(data)
         record["updated_at"] = _now()
         return record
 
-    def delete(self, site_id: str) -> bool:
-        return self._store.pop(site_id, None) is not None
+    def delete(self, site_id: str, user_id: str) -> bool:
+        record = self._store.get(site_id)
+        if record is None or record["user_id"] != user_id:
+            return False
+        del self._store[site_id]
+        return True
 
     def clear(self) -> None:
         self._store.clear()
@@ -58,25 +71,40 @@ class InMemorySiteRepository:
 class SupabaseSiteRepository:
     TABLE = "sites"
 
-    def list_all(self) -> list[dict]:
-        result = get_supabase().table(self.TABLE).select("*").order("site").execute()
+    def list_all(self, user_id: str) -> list[dict]:
+        result = (
+            get_supabase().table(self.TABLE)
+            .select("*").eq("user_id", user_id).order("site").execute()
+        )
         return result.data
 
-    def get(self, site_id: str) -> dict | None:
-        result = get_supabase().table(self.TABLE).select("*").eq("id", site_id).execute()
+    def get(self, site_id: str, user_id: str) -> dict | None:
+        result = (
+            get_supabase().table(self.TABLE)
+            .select("*").eq("id", site_id).eq("user_id", user_id).execute()
+        )
         return result.data[0] if result.data else None
 
-    def create(self, data: dict) -> dict:
-        result = get_supabase().table(self.TABLE).insert(data).execute()
+    def create(self, data: dict, user_id: str) -> dict:
+        result = (
+            get_supabase().table(self.TABLE)
+            .insert({**data, "user_id": user_id}).execute()
+        )
         return result.data[0]
 
-    def update(self, site_id: str, data: dict) -> dict | None:
-        payload = {**data, "updated_at": _now()}
-        result = get_supabase().table(self.TABLE).update(payload).eq("id", site_id).execute()
+    def update(self, site_id: str, data: dict, user_id: str) -> dict | None:
+        result = (
+            get_supabase().table(self.TABLE)
+            .update({**data, "updated_at": _now()})
+            .eq("id", site_id).eq("user_id", user_id).execute()
+        )
         return result.data[0] if result.data else None
 
-    def delete(self, site_id: str) -> bool:
-        result = get_supabase().table(self.TABLE).delete().eq("id", site_id).execute()
+    def delete(self, site_id: str, user_id: str) -> bool:
+        result = (
+            get_supabase().table(self.TABLE)
+            .delete().eq("id", site_id).eq("user_id", user_id).execute()
+        )
         return bool(result.data)
 
 
