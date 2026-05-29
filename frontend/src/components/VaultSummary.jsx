@@ -23,7 +23,8 @@ function HealthRow({ label, value, danger }) {
 }
 
 export default function VaultSummary() {
-  const { sites } = useVault();
+  const vault = useVault();
+  const sites = vault?.sites;
   const health = React.useMemo(() => computeVaultHealth(sites), [sites]);
   const ready = Array.isArray(sites);
 
