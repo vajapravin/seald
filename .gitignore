@@ -15,3 +15,5 @@ __pycache__/
 .vscode/
 .sublime-workspace
 
+.DS_Store
+**/.DS_Store

@@ -31,7 +31,5 @@ export function VaultProvider({ children }) {
 }
 
 export function useVault() {
-  const ctx = React.useContext(VaultContext);
-  if (!ctx) throw new Error('useVault must be used within a VaultProvider');
-  return ctx;
+  return React.useContext(VaultContext); // null if outside provider
 }

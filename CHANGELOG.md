@@ -5,6 +5,19 @@ Format: [Keep a Changelog](https://keepachangelog.com/) · Versioning: [SemVer](
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-07-31
+
+### Added
+- User authentication (Supabase Auth): email + password with confirmation, Google and GitHub social login
+- Per-user vault isolation: backend JWT verification (ES256/JWKS), user-scoped queries, RLS backstop
+- Sign-in, register, and email-confirmation callback screens
+- Vault health summary in the left panel (weak/reused/no-backup counts + score)
+
+### Changed
+- README overhauled to reflect the authenticated multi-user architecture
+
+## [Released]
+
 ## [0.7.0] - 2026-07-31
 
 ### Added
@@ -12,8 +25,6 @@ Format: [Keep a Changelog](https://keepachangelog.com/) · Versioning: [SemVer](
 
 ### Changed
 - Sites data lifted into a shared VaultContext (single fetch, consumed by dashboard and summary)
-
-## [Released]
 
 ## [0.6.0] - 2026-07-31
 
