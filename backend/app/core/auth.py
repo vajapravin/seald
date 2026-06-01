@@ -4,6 +4,9 @@ Supabase signs session JWTs with per-project ECC keys. We verify the
 signature against the project's public JWKS (fetched and cached), and
 check the audience and issuer.
 """
+
+from typing import Annotated
+
 import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -27,7 +30,7 @@ def _get_jwks_client() -> PyJWKClient:
 
 
 def get_current_user_id(
-    credentials: HTTPAuthorizationCredentials = Depends(_bearer),
+    credentials: Annotated[HTTPAuthorizationCredentials, Depends(_bearer)],
 ) -> str:
     settings = get_settings()
     if not settings.SUPABASE_URL:

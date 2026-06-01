@@ -4,7 +4,8 @@ Routes depend on the SiteRepository protocol. Every method takes a user_id
 and only ever touches that user's rows — backend-level filtering, with
 Postgres RLS as the defense-in-depth backstop.
 """
-from datetime import datetime, timezone
+
+from datetime import UTC, datetime
 from typing import Protocol
 from uuid import uuid4
 
@@ -13,7 +14,7 @@ from app.services.supabase_client import get_supabase
 
 
 def _now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    return datetime.now(UTC).isoformat()
 
 
 class SiteRepository(Protocol):
@@ -73,37 +74,49 @@ class SupabaseSiteRepository:
 
     def list_all(self, user_id: str) -> list[dict]:
         result = (
-            get_supabase().table(self.TABLE)
-            .select("*").eq("user_id", user_id).order("site").execute()
+            get_supabase()
+            .table(self.TABLE)
+            .select("*")
+            .eq("user_id", user_id)
+            .order("site")
+            .execute()
         )
         return result.data
 
     def get(self, site_id: str, user_id: str) -> dict | None:
         result = (
-            get_supabase().table(self.TABLE)
-            .select("*").eq("id", site_id).eq("user_id", user_id).execute()
+            get_supabase()
+            .table(self.TABLE)
+            .select("*")
+            .eq("id", site_id)
+            .eq("user_id", user_id)
+            .execute()
         )
         return result.data[0] if result.data else None
 
     def create(self, data: dict, user_id: str) -> dict:
-        result = (
-            get_supabase().table(self.TABLE)
-            .insert({**data, "user_id": user_id}).execute()
-        )
+        result = get_supabase().table(self.TABLE).insert({**data, "user_id": user_id}).execute()
         return result.data[0]
 
     def update(self, site_id: str, data: dict, user_id: str) -> dict | None:
         result = (
-            get_supabase().table(self.TABLE)
+            get_supabase()
+            .table(self.TABLE)
             .update({**data, "updated_at": _now()})
-            .eq("id", site_id).eq("user_id", user_id).execute()
+            .eq("id", site_id)
+            .eq("user_id", user_id)
+            .execute()
         )
         return result.data[0] if result.data else None
 
     def delete(self, site_id: str, user_id: str) -> bool:
         result = (
-            get_supabase().table(self.TABLE)
-            .delete().eq("id", site_id).eq("user_id", user_id).execute()
+            get_supabase()
+            .table(self.TABLE)
+            .delete()
+            .eq("id", site_id)
+            .eq("user_id", user_id)
+            .execute()
         )
         return bool(result.data)
 
