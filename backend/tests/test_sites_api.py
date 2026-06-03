@@ -1,5 +1,6 @@
-from app.repositories.sites import _memory_repo
 from tests.conftest import TEST_USER_ID
+
+from app.repositories.sites import _memory_repo
 
 PAYLOAD = {
     "site": "github.com",
