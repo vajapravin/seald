@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     API_V1_PREFIX: str = "/api/v1"
 
     # CORS (comma-separated list of allowed origins)
-    CORS_ORIGINS: str = "http://frontend:3000"
+    CORS_ORIGINS: str = "http://frontend:3002"
 
     # Supabase
     SUPABASE_URL: str = ""
