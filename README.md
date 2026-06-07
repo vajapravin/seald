@@ -161,9 +161,9 @@ users, and enables Row Level Security.
 ### 3. Configure authentication (Supabase dashboard)
 
 - **Authentication → Providers → Email:** enable it and turn **Confirm email ON**.
-- **Authentication → URL Configuration:** add `http://localhost:3000` to the
+- **Authentication → URL Configuration:** add `http://localhost:3002` to the
   Site URL and the Redirect URLs allowlist (include
-  `http://localhost:3000/auth/callback`).
+  `http://localhost:3002/auth/callback`).
 - **Social login (optional):** enable Google and/or GitHub under
   **Authentication → Providers**, using OAuth apps whose callback URL is your
   project's `https://<ref>.supabase.co/auth/v1/callback`.
@@ -213,7 +213,7 @@ Then open:
 
 | URL | What |
 |---|---|
-| http://localhost:3000 | The Seald web app (register or sign in to start) |
+| http://localhost:3002 | The Seald web app (register or sign in to start) |
 | http://localhost:8000/docs | Interactive API documentation |
 | http://localhost:8000/health | Backend health check |
 
