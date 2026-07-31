@@ -1,0 +1,17 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+!.env.example
+
+# Local databases and checkpoints
+*.db
+*.sqlite
+
+# IDE files
+.vscode/
+.sublime-workspace
+

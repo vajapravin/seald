@@ -1,0 +1,36 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: seald-backend
+    env_file:
+      - backend/.env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app  # Enables hot-reloading during development
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    restart: unless-stopped
+    networks:
+      - app-net
+
+  # frontend service will be added in the next step (React SPA)
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: seald-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app  # Enables hot-reloading during development
+    restart: unless-stopped
+    networks:
+      - app-net
+
+networks:
+  app-net:
+    driver: bridge
