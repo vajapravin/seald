@@ -1,4 +1,5 @@
 import * as React from 'react';
+import usePageTitle from '../hooks/usePageTitle';
 import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -77,6 +78,7 @@ export default function Dashboard() {
   const [toDelete, setToDelete] = React.useState(null);
   const [deleting, setDeleting] = React.useState(false);
   const [snack, setSnack] = React.useState('');
+  usePageTitle('Your vault');
 
   const load = React.useCallback(() => {
     setError('');

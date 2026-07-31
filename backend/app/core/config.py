@@ -8,7 +8,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     # App
     APP_NAME: str = "Seald API"
-    APP_VERSION: str = "0.5.0"
+    APP_VERSION: str = "0.6.0"
     DEBUG: bool = False
     API_V1_PREFIX: str = "/api/v1"
 

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import usePageTitle from '../hooks/usePageTitle';
 import PropTypes from 'prop-types';
 import { useNavigate, useParams, useBlocker } from 'react-router-dom';
 import { ZxcvbnFactory } from '@zxcvbn-ts/core';
@@ -67,6 +68,8 @@ export default function SiteForm({ mode }) {
   const [genCodes, setGenCodes] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(!isEdit);
   const [error, setError] = React.useState('');
+  
+  usePageTitle(isEdit ? `Edit ${values.site || 'site'}` : 'Add site');
 
   // Generator options
   const [length, setLength] = React.useState(16);
