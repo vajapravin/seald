@@ -234,9 +234,9 @@ export default function SiteForm({ mode }) {
                   id="backup_code"
                   name="backup_code"
                   placeholder={'One code per line, e.g.\nA3F9-K2M7'}
-                  size="small"
+                  size="large"
                   multiline
-                  minRows={3}
+                  minRows={10}
                   value={values.backup_code}
                   onChange={setField('backup_code')}
                   sx={{ fontFamily: 'monospace' }}
@@ -249,9 +249,9 @@ export default function SiteForm({ mode }) {
                   id="note"
                   name="note"
                   placeholder="Anything worth remembering about this account"
-                  size="small"
+                  size="large"
                   multiline
-                  minRows={2}
+                  minRows={10}
                   value={values.note}
                   onChange={setField('note')}
                 />
