@@ -5,6 +5,13 @@ Format: [Keep a Changelog](https://keepachangelog.com/) · Versioning: [SemVer](
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-07-31
+
+### Added
+- Per-route page titles (e.g. "Your vault · Seald")
+
+## [Released]
+
 ## [0.5.0] - 2026-07-31
 
 ### Added
@@ -15,8 +22,6 @@ Format: [Keep a Changelog](https://keepachangelog.com/) · Versioning: [SemVer](
 
 ### Changed
 - Migrated to React Router data router (createBrowserRouter) to support navigation blocking
-
-## [Released]
 
 ## [0.4.0] - 2026-07-31
 
