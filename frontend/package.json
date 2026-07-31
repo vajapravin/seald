@@ -16,7 +16,8 @@
     "prop-types": "^15.8.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.7.0"
+    "react-router-dom": "^7.7.0",
+    "@mui/x-data-grid": "^9.10.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.6.0",

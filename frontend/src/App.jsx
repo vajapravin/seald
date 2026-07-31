@@ -82,7 +82,7 @@ export default function App(props) {
             </Link>
           </Box>
 
-          <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: 700 } }}>
+          <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '100%' } }}>
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/sites/new" element={<SiteForm mode="create" />} />
