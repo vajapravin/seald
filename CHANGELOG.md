@@ -5,6 +5,14 @@ Format: [Keep a Changelog](https://keepachangelog.com/) · Versioning: [SemVer](
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-31
+
+### Added
+- Vault entries persist to Supabase (sites table migration, service-role client)
+
+### Changed
+- Storage moved behind a repository interface (in-memory backend retained for tests)
+
 ## [0.1.0] - 2026-07-31
 
 ### Added
