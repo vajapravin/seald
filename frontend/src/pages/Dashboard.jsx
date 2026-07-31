@@ -1,4 +1,5 @@
 import * as React from 'react';
+import usePageTitle from '../hooks/usePageTitle';
 import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -32,6 +33,7 @@ import {
   GridToolbarContainer,
 } from '@mui/x-data-grid';
 import { api } from '../api/client';
+import { useVault } from '../context/VaultContext';
 
 // Relative "3 days ago" via the platform — no date library dependency.
 const rtf = new Intl.RelativeTimeFormat(undefined, { numeric: 'auto' });
@@ -71,27 +73,12 @@ function QuickSearchToolbar() {
 export default function Dashboard() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [sites, setSites] = React.useState(null);
-  const [error, setError] = React.useState('');
+  const { sites, error, load, setError } = useVault();
   const [revealed, setRevealed] = React.useState({});
   const [toDelete, setToDelete] = React.useState(null);
   const [deleting, setDeleting] = React.useState(false);
   const [snack, setSnack] = React.useState('');
-
-  const load = React.useCallback(() => {
-    setError('');
-    api
-      .listSites()
-      .then(setSites)
-      .catch((e) => {
-        setSites(undefined); // undefined = failed · null = loading · [] = truly empty
-        setError(e.message);
-      });
-  }, []);
-
-  React.useEffect(() => {
-    load();
-  }, [load]);
+  usePageTitle('Your vault');
 
   React.useEffect(() => {
     if (location.state?.toast) {
