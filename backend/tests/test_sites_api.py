@@ -25,9 +25,9 @@ def test_create_and_get(client):
 def test_stored_secrets_are_encrypted(client):
     created = client.post("/api/v1/sites", json=PAYLOAD).json()
     stored = sites._SITES[created["id"]]
-    assert stored["password"] != "Temp123!"          # ciphertext at rest
+    assert stored["password"] != "Temp123!"  # ciphertext at rest
     assert stored["backup_code"] != "A3F9-K2M7"
-    assert created["password"] == "Temp123!"          # plaintext in API response
+    assert created["password"] == "Temp123!"  # plaintext in API response
 
 
 def test_update(client):

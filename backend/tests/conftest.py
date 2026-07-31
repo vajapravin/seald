@@ -4,6 +4,7 @@ ENCRYPTION_KEYS is set *before* the app is imported so the cached settings
 and Fernet instances are built with the test key — tests never depend on a
 developer's local .env.
 """
+
 import os
 
 from cryptography.fernet import Fernet
