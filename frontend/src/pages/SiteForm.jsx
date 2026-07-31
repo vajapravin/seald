@@ -92,8 +92,10 @@ export default function SiteForm({ mode }) {
     try {
       if (isEdit) {
         await api.updateSite(id, values);
+        navigate('/', { state: { toast: `${values.site} updated` } });
       } else {
         await api.createSite(values);
+        navigate('/', { state: { toast: `${values.site} saved to your vault` } });
       }
       navigate('/');
     } catch (e) {
@@ -262,7 +264,12 @@ export default function SiteForm({ mode }) {
               <Button variant="outlined" onClick={() => navigate('/')} disabled={saving}>
                 Cancel
               </Button>
-              <Button type="submit" variant="contained" disabled={saving}>
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={saving}
+                startIcon={saving ? <CircularProgress size={16} color="inherit" /> : null}
+              >
                 {saving ? 'Saving…' : isEdit ? 'Save changes' : 'Save site'}
               </Button>
             </Stack>
