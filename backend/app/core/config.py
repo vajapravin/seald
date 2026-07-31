@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     # Encryption (comma-separated Fernet keys; first = active, rest = legacy for rotation)
     ENCRYPTION_KEYS: str = ""
 
+    # Storage backend: "supabase" or "memory" (tests, offline dev)
+    STORAGE_BACKEND: str = "supabase"
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     @property
