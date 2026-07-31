@@ -380,7 +380,7 @@ export const inputsCustomizations = {
         padding: 0,
       },
       root: ({ theme }) => ({
-        padding: '8px 12px',
+        padding: '12px 0px 12px 12px',
         color: (theme.vars || theme).palette.text.primary,
         borderRadius: (theme.vars || theme).shape.borderRadius,
         border: `1px solid ${(theme.vars || theme).palette.divider}`,

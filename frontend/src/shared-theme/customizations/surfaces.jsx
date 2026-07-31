@@ -110,4 +110,11 @@ export const surfacesCustomizations = {
       },
     },
   },
+  MuiButtonBase: {
+    styleOverrides: {
+      root: ({ theme }) => ({
+        margin: '2px',
+      }),
+    },
+  },
 };

@@ -5,6 +5,15 @@ Format: [Keep a Changelog](https://keepachangelog.com/) · Versioning: [SemVer](
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-31
+
+### Added
+- Two-panel layout with brand panel and vault summary (total sites)
+- Seald logo and favicon
+
+### Changed
+- Dialog action buttons spacing via scoped theme override
+
 ## [0.2.0] - 2026-07-31
 
 ### Added
