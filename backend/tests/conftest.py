@@ -15,6 +15,7 @@ os.environ["ENCRYPTION_KEYS"] = Fernet.generate_key().decode()
 os.environ["STORAGE_BACKEND"] = "memory"
 
 from app.core.config import get_settings
+
 get_settings.cache_clear()
 
 from app.core.auth import get_current_user_id
@@ -22,6 +23,7 @@ from app.main import app
 from app.repositories.sites import _memory_repo
 
 TEST_USER_ID = "00000000-0000-0000-0000-000000000001"
+
 
 @pytest.fixture(autouse=True)
 def override_auth():

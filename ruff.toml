@@ -17,4 +17,7 @@ select = [
 known-first-party = ["app"]
 
 [lint.per-file-ignores]
+# B008: FastAPI's Depends() in argument defaults is idiomatic, not a bug
 "backend/app/api/**" = ["B008"]
+# E402: conftest sets env vars before importing app modules — order matters
+"backend/tests/conftest.py" = ["E402"]
