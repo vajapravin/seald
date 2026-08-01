@@ -1,10 +1,21 @@
+import { supabase } from '../lib/supabase';
+
 const BASE = '/api/v1';
 
 async function request(path, options = {}) {
-  const res = await fetch(`${BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options,
-  });
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  const headers = {
+    'Content-Type': 'application/json',
+    ...options.headers,
+  };
+  if (session?.access_token) {
+    headers.Authorization = `Bearer ${session.access_token}`;
+  }
+
+  const res = await fetch(`${BASE}${path}`, { ...options, headers });
   if (!res.ok) {
     let detail = `Request failed (${res.status})`;
     try {
