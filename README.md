@@ -214,8 +214,8 @@ Then open:
 | URL | What |
 |---|---|
 | http://localhost:3002 | The Seald web app (register or sign in to start) |
-| http://localhost:8000/docs | Interactive API documentation |
-| http://localhost:8000/health | Backend health check |
+| http://localhost:8002/docs | Interactive API documentation |
+| http://localhost:8002/health | Backend health check |
 
 > 🔑 **Back up your `ENCRYPTION_KEYS` value somewhere safe and separate from the
 > database.** Losing it means losing every stored secret, permanently. That is

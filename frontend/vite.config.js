@@ -7,10 +7,10 @@ export default defineConfig({
     host: true,
     port: 3002,
     proxy: {
-      // In local dev (npm run dev) the backend runs on localhost:8000.
+      // In local dev (npm run dev) the backend runs on localhost:8002.
       // Inside docker-compose the VITE_PROXY_TARGET env points at the backend service.
       '/api': {
-        target: process.env.VITE_PROXY_TARGET || 'http://localhost:8082',
+        target: process.env.VITE_PROXY_TARGET || 'http://localhost:8002',
         changeOrigin: true,
       },
     },
