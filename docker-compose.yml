@@ -7,10 +7,10 @@ services:
     env_file:
       - backend/.env
     ports:
-      - "8000:8000"
+      - "8002:8002"
     volumes:
       - ./backend:/app  # Enables hot-reloading during development
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8002 --reload
     restart: unless-stopped
     networks:
       - app-net
@@ -22,7 +22,7 @@ services:
       dockerfile: frontend/Dockerfile
     container_name: seald-frontend
     ports:
-      - "3000:3000"
+      - "3002:3002"
     depends_on:
       - backend
     volumes:
