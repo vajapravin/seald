@@ -20,6 +20,9 @@ with two commands.
 
 ![Seald dashboard](assets/dashboard.png)
 
+
+🌐 **Live demo:** [https://seald.vajapravin.me/](https://seald.vajapravin.me/)
+
 ## 📸 Screens
 
 <table>
